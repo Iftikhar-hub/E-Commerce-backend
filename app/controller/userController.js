@@ -1,5 +1,5 @@
 
-const userModel = require('../models/eccommerce')
+const userModel = require('../models/userModel')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 require("dotenv").config();
@@ -99,5 +99,28 @@ const userLogin = async (req, res) => {
     
 }
 
+const userLogout = (req, res) => {
+    res.cookie('token', '',{
+        httpOnly: true,
+        expires : new Date(0)
+    })
 
-module.exports = { userHome, userRegistration, userLogin };
+    res.status(200).json({msg:'Logout Successful'})
+    
+}
+
+const userProfile = (req, res) => {
+    res.status(200).json({
+        msg:'User Profile',
+        // user: req.user,
+        user: {
+            userid:req.user.id,
+            username: req.user.name,
+            userEmail: req.user.email
+        }
+    })
+    
+}
+
+
+module.exports = { userHome, userRegistration, userLogin, userLogout, userProfile };
