@@ -12,9 +12,10 @@ const userHome = (req, res) => {
 const userRegistration = async (req, res) => {
     const { fname, email, pass, cpass } = req.body || {}; 
     
+    
    
     try {
-        if (!fname || !email || !pass || !cpass) {
+        if (!fname || !email || !pass || !cpass ) {
 
             return res.status(400).json({ msg: "All fields required" });
         }
@@ -31,11 +32,15 @@ const userRegistration = async (req, res) => {
         }
 
         const salt = await bcrypt.genSalt();
-        const hashedPassword = await bcrypt.hash(pass,salt);
+        const hashedPassword = await bcrypt.hash(pass, salt);
+        
+        const filePath = req.file ? req.file.path : "Not Uploaded";
+        console.log(filePath)
 
         const user = new userModel({
             name: fname,
-            email:email,
+            email: email,
+            file: filePath,
             password: hashedPassword,
             
         });
@@ -107,20 +112,29 @@ const userLogout = (req, res) => {
 
     res.status(200).json({msg:'Logout Successful'})
     
-}
+} 
 
 const userProfile = (req, res) => {
     res.status(200).json({
-        msg:'User Profile',
+        msg: 'User Profile',
+        name: req.user.name,
+        email: req.user.email,
+        file: req.user.file,
+    
+       
         // user: req.user,
-        user: {
-            userid:req.user.id,
-            username: req.user.name,
-            userEmail: req.user.email
-        }
+        // user: {
+        //     userid:req.user.id,
+        //     username: req.user.name,
+        //     userEmail: req.user.email
+        // }
     })
+    console.log(file)
     
 }
+
+
+
 
 
 module.exports = { userHome, userRegistration, userLogin, userLogout, userProfile };
