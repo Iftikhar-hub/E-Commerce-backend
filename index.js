@@ -21,6 +21,7 @@ const userRouter = require("./app/routes/routes");
 
 app.use(express.urlencoded({ extended: true }));
 app.use("/api/user",userRouter);
+app.use("/api/product",userRouter);
 
 connectDB().then(() => {
     app.listen(process.env.PORT || 8000, () => {

@@ -5,9 +5,6 @@ const jwt = require('jsonwebtoken')
 require("dotenv").config();
 
 const cloudinary = require("cloudinary").v2;
-// const dotenv = require('dotenv')
-
-// dotenv.config();
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -15,13 +12,7 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
  
-// import { v2 as cloudinary } from 'cloudinary';
 
-// cloudinary.config({
-//     cloud_name: '',
-//     api_key: '',
-//     api_secret: '' // Click 'View API Keys' above to copy your API secret
-// });
 
 const userHome = (req, res) => {
     res.send("well Come")
