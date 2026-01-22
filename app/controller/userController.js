@@ -4,6 +4,25 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 require("dotenv").config();
 
+const cloudinary = require("cloudinary").v2;
+// const dotenv = require('dotenv')
+
+// dotenv.config();
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+ 
+// import { v2 as cloudinary } from 'cloudinary';
+
+// cloudinary.config({
+//     cloud_name: '',
+//     api_key: '',
+//     api_secret: '' // Click 'View API Keys' above to copy your API secret
+// });
+
 const userHome = (req, res) => {
     res.send("well Come")
 }
@@ -11,9 +30,7 @@ const userHome = (req, res) => {
 
 const userRegistration = async (req, res) => {
     const { fname, email, pass, cpass } = req.body || {}; 
-    
-    
-   
+
     try {
         if (!fname || !email || !pass || !cpass ) {
 
@@ -34,13 +51,16 @@ const userRegistration = async (req, res) => {
         const salt = await bcrypt.genSalt();
         const hashedPassword = await bcrypt.hash(pass, salt);
         
-        const filePath = req.file ? req.file.path : "Not Uploaded";
-        console.log(filePath)
+        const file = req.file.path
+           const cloudinaryResponse = await cloudinary.uploader.upload(file, {
+               folder:'UserPicture'
+           })
+           console.log('User Picture', cloudinaryResponse)
 
         const user = new userModel({
             name: fname,
             email: email,
-            file: filePath,
+            file: cloudinaryResponse.secure_url,
             password: hashedPassword,
             
         });
@@ -121,13 +141,6 @@ const userProfile = (req, res) => {
         email: req.user.email,
         file: req.user.file,
     
-       
-        // user: req.user,
-        // user: {
-        //     userid:req.user.id,
-        //     username: req.user.name,
-        //     userEmail: req.user.email
-        // }
     })
     console.log(file)
     
