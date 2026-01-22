@@ -50,4 +50,18 @@ const productInsertion = async (req, res) => {
     
 }
 
-module.exports = { productInsertion };
+const productList = (req, res) => {
+    res.status(200).json({
+        msg: 'Product List',
+        pname: req.product.pname,
+        description: req.product.description,
+        orignalPrice: req.product.orignalPrice,
+        discountedPrice: req.product.discountedPrice,
+        image: req.products.image,
+    
+    })
+    console.log(image)
+    
+}
+
+module.exports = { productInsertion, productList };
