@@ -16,7 +16,7 @@ userRouter.get("/me", authMiddleware, userProfile)
 
 userRouter.post("/product-insert", uploadProduct.single('image'), productInsertion)
 
-userRouter.get("/productDisplay", productList)
+userRouter.get("/productDisplay", productList) 
 
 
 module.exports = userRouter;
