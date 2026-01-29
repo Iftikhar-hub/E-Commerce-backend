@@ -8,12 +8,15 @@ app.use(cookieParser());
 
 const allowedOrigins = [
     'http://localhost:5173',
-    'https://e-commerce-nu-five-82.vercel.app' 
+    'https://e-commerce-nu-five-82.vercel.app',
+    
 ];
+
 app.use(cors({
     origin: allowedOrigins,
-    
-    credentials: true
+    credentials: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    allowedHeaders: 'Content-Type, Authorization',
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
