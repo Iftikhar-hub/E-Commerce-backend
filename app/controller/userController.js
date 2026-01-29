@@ -133,7 +133,7 @@ const userProfile = (req, res) => {
         file: req.user.file,
     
     })
-    console.log(file)
+    
     
 }
 

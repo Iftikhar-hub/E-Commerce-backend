@@ -5,7 +5,7 @@ const { userRegistration, userHome, userLogin, userLogout, userProfile } = requi
 const { authMiddleware } = require("../middleware/authMiddleware");
 const { upload } = require("../middleware/imageMiddleware");
 const { uploadProduct } = require("../middleware/productMiddleware");
-const { productInsertion, productList } = require("../controller/productController");
+const { productInsertion, productList, productCheckout, invoiceRetrieval } = require("../controller/productController");
 
 userRouter.get("/", userHome)
 userRouter.post("/user-insert", upload.single('file'), userRegistration)
@@ -17,6 +17,8 @@ userRouter.get("/me", authMiddleware, userProfile)
 userRouter.post("/product-insert", uploadProduct.single('image'), productInsertion)
 
 userRouter.get("/productDisplay", productList) 
+userRouter.post('/create-checkout-session', productCheckout);
+userRouter.get('/get-invoice/:sessionId',invoiceRetrieval);
 
 
 module.exports = userRouter;

@@ -11,6 +11,7 @@ cloudinary.config({
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const productInsertion = async (req, res) => {
     
@@ -66,4 +67,77 @@ const productList = async (req, res) => {
     
 };
 
-module.exports = { productInsertion, productList };
+
+const MyDomain = 'http://localhost:5173';
+const productCheckout = async (req, res) => {
+    const cartSitem = req.body;
+    try {
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types: ['card'],
+            line_items: cartSitem.cartItems.map(item => ({
+                price_data: {
+                    currency: 'usd',
+                    product_data: {
+                        name: item.pname,
+                        images: [item.image],
+
+                    },
+                    unit_amount: Math.round(item.discountedPrice * 100),
+
+                },
+                quantity: item.quantity,
+
+
+            })),
+
+            mode: 'payment',
+            invoice_creation: {
+                enabled: true
+            },
+            success_url: `http://localhost:5173/success?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${MyDomain}?canceled=true`,
+        });
+
+
+        console.log("carts are ", cartSitem.cartItems),
+            res.json({ url: session.url });
+
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Stripe checkout session failed' });
+    }
+
+    
+}
+
+const invoiceRetrieval =  async (req, res) => {
+    try {
+        const session = await stripe.checkout.sessions.retrieve(
+            req.params.sessionId,
+            { expand: ['invoice'] }
+        );
+
+        if (!session.invoice) {
+            return res.status(404).json({ error: "Invoice not found" });
+        }
+
+        const invoice = await stripe.invoices.retrieve(session.invoice.id);
+
+        res.json({
+            invoice_url: invoice.invoice_pdf
+        });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to get invoice" });
+    }
+};
+
+
+   
+
+
+
+
+module.exports = { productInsertion, productList, productCheckout, invoiceRetrieval };
