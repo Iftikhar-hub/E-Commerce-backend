@@ -13,13 +13,18 @@ const allowedOrigins = [
 ];
 
 app.use(cors({
-    origin: allowedOrigins,
+    origin: [
+        "http://localhost:5173",
+        "https://e-commerce-nu-five-82.vercel.app"
+       
+    ],
     credentials: true,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    allowedHeaders: 'Content-Type, Authorization',
+   
+    methods: ["GET", "POST", "PUT", "DELETE"],
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
+app.set("trust proxy", 1);
 
 
 const connectDB = require("./dbConnection");

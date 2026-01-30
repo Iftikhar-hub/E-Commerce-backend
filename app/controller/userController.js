@@ -58,7 +58,8 @@ const userRegistration = async (req, res) => {
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '2d' })
         res.cookie('token', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
+            secure: true,
+            sameSite: "none",
             maxAge: 30*24*60*60*1000
 
         })
@@ -96,7 +97,8 @@ const userLogin = async (req, res) => {
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '2d' })
         res.cookie('token', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
+            secure: true,
+            sameSite: "none",
             maxAge: 30 * 24 * 60 * 60 * 1000
 
         })
@@ -118,6 +120,8 @@ const userLogin = async (req, res) => {
 const userLogout = (req, res) => {
     res.cookie('token', '',{
         httpOnly: true,
+        secure: true,
+        sameSite: "none",
         expires : new Date(0)
     })
 
