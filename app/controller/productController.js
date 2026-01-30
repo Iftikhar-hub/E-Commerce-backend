@@ -68,7 +68,10 @@ const productList = async (req, res) => {
 };
 
 
-const MyDomain = 'http://localhost:5173';
+
+const MyDomain = process.env.NODE_ENV === "production"
+    ? "https://e-commerce-nu-five-82.vercel.app"
+    : "http://localhost:5173";
 const productCheckout = async (req, res) => {
     const cartSitem = req.body;
     try {
@@ -94,13 +97,13 @@ const productCheckout = async (req, res) => {
             invoice_creation: {
                 enabled: true
             },
-            success_url: `http://localhost:5173/success?session_id={CHECKOUT_SESSION_ID}`,
+            success_url: `${MyDomain}/success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${MyDomain}?canceled=true`,
         });
 
 
         console.log("carts are ", cartSitem.cartItems),
-            res.json({ url: session.url });
+        res.json({ url: session.url });
 
     }
     catch (err) {
@@ -132,7 +135,7 @@ const invoiceRetrieval =  async (req, res) => {
         console.error(err);
         res.status(500).json({ error: "Failed to get invoice" });
     }
-};
+}; 
 
 
    
