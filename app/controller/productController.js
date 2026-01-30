@@ -69,12 +69,13 @@ const productList = async (req, res) => {
 
 
 
-const MyDomain = process.env.NODE_ENV === "production"
-    ? "https://e-commerce-nu-five-82.vercel.app"
-    : "http://localhost:5173";
+
 const productCheckout = async (req, res) => {
     const cartSitem = req.body;
     try {
+        const MyDomain = process.env.NODE_ENV === "production"
+            ? "https://e-commerce-nu-five-82.vercel.app"
+            : "http://localhost:5173";
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],
             line_items: cartSitem.cartItems.map(item => ({
