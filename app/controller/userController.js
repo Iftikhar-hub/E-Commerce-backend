@@ -21,6 +21,7 @@ const userHome = (req, res) => {
 
 const userRegistration = async (req, res) => {
     const { fname, email, pass, cpass } = req.body || {}; 
+   
 
     try {
         if (!fname || !email || !pass || !cpass ) {
