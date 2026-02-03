@@ -110,7 +110,7 @@ const userLogin = async (req, res) => {
         console.error(err)
         res.status(500).json({
             status: 0,
-            msg: "Failed to Register",
+            msg: "Failed to Login",
             error: err.message
         });
     }
@@ -133,6 +133,7 @@ const userLogout = (req, res) => {
 const userProfile = (req, res) => {
     res.status(200).json({
         msg: 'User Profile',
+        id: req.user._id,
         name: req.user.name,
         email: req.user.email,
         file: req.user.file,
