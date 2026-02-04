@@ -1,11 +1,12 @@
 const Cart = require('../models/cartModel');
 
-// Add or update item in cart
+// ===== Add or update item in cart =====
 const addToCart = async (req, res) => {
     const userId = req.user._id;
     const { productId, quantity } = req.body;
 
-    if (!productId || !quantity) return res.status(400).json({ msg: "Product and quantity required" });
+    if (!productId || !quantity)
+        return res.status(400).json({ msg: "Product and quantity required" });
 
     try {
         let cart = await Cart.findOne({ user: userId });
@@ -15,7 +16,9 @@ const addToCart = async (req, res) => {
             cart = new Cart({ user: userId, items: [{ productId, quantity }] });
         } else {
             // Check if product exists
-            const itemIndex = cart.items.findIndex(item => item.productId.toString() === productId);
+            const itemIndex = cart.items.findIndex(
+                item => item.productId.toString() === productId
+            );
             if (itemIndex > -1) {
                 cart.items[itemIndex].quantity += quantity;
             } else {
@@ -24,14 +27,33 @@ const addToCart = async (req, res) => {
         }
 
         await cart.save();
-        res.status(200).json({ msg: "Cart updated", cart });
+
+        // Populate product details
+        await cart.populate("items.productId");
+
+        // Return only the added/updated item
+        const addedItem = cart.items.find(
+            item => item.productId._id.toString() === productId
+        );
+
+        res.status(200).json({
+            msg: "Item added to cart",
+            item: {
+                _id: addedItem.productId._id,
+                pname: addedItem.productId.pname,
+                image: addedItem.productId.image,
+                discountedPrice: addedItem.productId.discountedPrice,
+                orignalPrice: addedItem.productId.orignalPrice,
+                quantity: addedItem.quantity
+            }
+        });
     } catch (err) {
         console.error(err);
         res.status(500).json({ msg: "Error updating cart", error: err.message });
     }
 };
 
-// Get user cart
+// ===== Get user cart =====
 const getUserCart = async (req, res) => {
     try {
         const cart = await Cart.findOne({ user: req.user._id }).populate("items.productId");
@@ -41,7 +63,7 @@ const getUserCart = async (req, res) => {
     }
 };
 
-// Remove item from cart
+// ===== Remove item from cart =====
 const removeFromCart = async (req, res) => {
     const userId = req.user._id;
     const { productId } = req.body;
@@ -59,7 +81,7 @@ const removeFromCart = async (req, res) => {
     }
 };
 
-// Update quantity
+// ===== Update quantity =====
 const updateQuantity = async (req, res) => {
     const userId = req.user._id;
     const { productId, quantity } = req.body;
