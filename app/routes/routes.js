@@ -7,6 +7,9 @@ const { upload } = require("../middleware/imageMiddleware");
 const { uploadProduct } = require("../middleware/productMiddleware");
 const { productInsertion, productList, productCheckout, invoiceRetrieval } = require("../controller/productController");
 
+const { addToCart, getUserCart, removeFromCart, updateQuantity } = require("../controller/cartController");
+
+
 userRouter.get("/", userHome)
 userRouter.post("/user-insert", upload.single('file'), userRegistration)
 
@@ -18,7 +21,12 @@ userRouter.post("/product-insert", uploadProduct.single('image'), productInserti
 
 userRouter.get("/productDisplay", productList) 
 userRouter.post('/create-checkout-session', productCheckout);
-userRouter.get('/get-invoice/:sessionId',invoiceRetrieval);
+userRouter.get('/get-invoice/:sessionId', invoiceRetrieval);
+
+userRouter.post("/cart/add", authMiddleware, addToCart);
+userRouter.get("/cart", authMiddleware, getUserCart);
+userRouter.post("/cart/remove", authMiddleware, removeFromCart);
+userRouter.post("/cart/update", authMiddleware, updateQuantity);
 
 
 module.exports = userRouter;
