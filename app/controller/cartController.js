@@ -1,6 +1,5 @@
 const Cart = require('../models/cartModel');
 
-// ===== Add or update item in cart =====
 const addToCart = async (req, res) => {
     const userId = req.user._id;
     const { productId, quantity } = req.body;
@@ -10,12 +9,10 @@ const addToCart = async (req, res) => {
 
     try {
         let cart = await Cart.findOne({ user: userId });
-
         if (!cart) {
-            // Create new cart for user
             cart = new Cart({ user: userId, items: [{ productId, quantity }] });
         } else {
-            // Check if product exists
+
             const itemIndex = cart.items.findIndex(
                 item => item.productId.toString() === productId
             );
@@ -28,10 +25,7 @@ const addToCart = async (req, res) => {
 
         await cart.save();
 
-        // Populate product details
         await cart.populate("items.productId");
-
-        // Return only the added/updated item
         const addedItem = cart.items.find(
             item => item.productId._id.toString() === productId
         );
@@ -53,7 +47,6 @@ const addToCart = async (req, res) => {
     }
 };
 
-// ===== Get user cart =====
 const getUserCart = async (req, res) => {
     try {
         const cart = await Cart.findOne({ user: req.user._id }).populate("items.productId");
@@ -63,7 +56,6 @@ const getUserCart = async (req, res) => {
     }
 };
 
-// ===== Remove item from cart =====
 const removeFromCart = async (req, res) => {
     const userId = req.user._id;
     const { productId } = req.body;
@@ -81,7 +73,6 @@ const removeFromCart = async (req, res) => {
     }
 };
 
-// ===== Update quantity =====
 const updateQuantity = async (req, res) => {
     const userId = req.user._id;
     const { productId, quantity } = req.body;
