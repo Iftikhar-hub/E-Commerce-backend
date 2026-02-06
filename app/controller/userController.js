@@ -44,15 +44,15 @@ const userRegistration = async (req, res) => {
         const hashedPassword = await bcrypt.hash(pass, salt);
         
         // const file = req.file.path
-           const cloudinaryResponse = await cloudinary.uploader.upload(file, {
-               folder:'UserPicture'
-           })
+        //    const cloudinaryResponse = await cloudinary.uploader.upload(file, {
+        //        folder:'UserPicture'
+        //    })
         //    console.log('User Picture', cloudinaryResponse)
 
         const user = new userModel({
             name: fname,
             email: email,
-            file: cloudinaryResponse.secure_url,
+           
             password: hashedPassword,
             
         });
