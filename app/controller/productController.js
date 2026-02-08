@@ -15,10 +15,10 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const productInsertion = async (req, res) => {
     
-    const { pname, description, orignalPrice, discountedPrice } = req.body || {};
+    const { pname, description, orignalPrice, discountedPrice, category } = req.body || {};
 
     try {
-        if (!pname || !description || !orignalPrice || !discountedPrice) {
+        if (!pname || !description || !orignalPrice || !discountedPrice || !category) {
            return res.status(400).json({msg:'All Details Require'})
         }
 
@@ -37,6 +37,7 @@ const productInsertion = async (req, res) => {
             orignalPrice,
             discountedPrice,
             image: cloudinaryProductResponse.secure_url,
+            category 
 
 
         });
@@ -53,7 +54,13 @@ const productInsertion = async (req, res) => {
 
 const productList = async (req, res) => {
     try {
-        const pro = await productModel.find();
+        const category = req.query.category; 
+        let pro ;
+        if (category) {
+            pro = await productModel.find({ category });
+        } else {
+            pro = await productModel.find();
+        }
         res.status(200).json({
             msg: 'Product List',
             data: pro
