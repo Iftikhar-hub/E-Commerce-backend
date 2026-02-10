@@ -8,7 +8,7 @@ const { uploadProduct } = require("../middleware/productMiddleware");
 const { productInsertion, productList, productCheckout, invoiceRetrieval } = require("../controller/productController");
 
 const { addToCart, getUserCart, removeFromCart, updateQuantity } = require("../controller/cartController");
-const { sendMessage } = require("../controller/sendMesageContoller");
+const { sendMessage, sendEmail } = require("../controller/sendMesageContoller");
 
 
 userRouter.get("/", userHome)
@@ -30,6 +30,7 @@ userRouter.post("/cart/remove", authMiddleware, removeFromCart);
 userRouter.post("/cart/update", authMiddleware, updateQuantity);
 
 userRouter.post("/send-email", sendMessage)
+userRouter.post("/sendEmail", sendEmail)
 
 
 module.exports = userRouter;
