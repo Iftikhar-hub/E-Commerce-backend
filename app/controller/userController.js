@@ -77,6 +77,35 @@ const userRegistration = async (req, res) => {
     }
 };
 
+const userUpdate = async (req, res) => {
+    const { name, email, address, phone, currentPassword, newPassword, confirmNewPassword } = req.body || {};
+    
+   
+
+    try {
+        const userId = req.user._id;
+        const user = await userModel.findById(userId);
+       
+        const isValid = await bcrypt.compare(currentPassword, user.password);
+        if (!isValid) {
+            return res.status(400).json({
+                status: 0,
+                msg: "Invalid Current Password"
+            });
+        }
+       
+
+        
+    } catch (err) {
+        res.status(500).json({
+            status: 0,
+            msg: "Failed to update",
+            error: err.message
+        });
+    }
+}
+
+
 const userLogin = async (req, res) => {
     const { email, password } = req.body || {};
 
@@ -147,4 +176,4 @@ const userProfile = (req, res) => {
 
 
 
-module.exports = { userHome, userRegistration, userLogin, userLogout, userProfile };
+module.exports = { userHome, userRegistration, userLogin, userLogout, userProfile, userUpdate };

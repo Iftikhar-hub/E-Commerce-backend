@@ -1,7 +1,7 @@
 const express = require("express");
 
 const userRouter = express.Router();
-const { userRegistration, userHome, userLogin, userLogout, userProfile } = require("../controller/userController");
+const { userRegistration, userHome, userLogin, userLogout, userProfile, userUpdate } = require("../controller/userController");
 const { authMiddleware } = require("../middleware/authMiddleware");
 const { upload } = require("../middleware/imageMiddleware");
 const { uploadProduct } = require("../middleware/productMiddleware");
@@ -37,6 +37,8 @@ userRouter.post("/wishlist/update", authMiddleware, updateQuantityy);
 
 userRouter.post("/send-email", sendMessage)
 userRouter.post("/sendEmail", sendEmail)
+
+userRouter.put("/user-update", userUpdate)
 
 
 module.exports = userRouter;
