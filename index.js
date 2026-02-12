@@ -17,6 +17,7 @@ app.use(cors({
         "http://localhost:5173",
         "https://e-commerce-nu-five-82.vercel.app",
         "https://e-commerce-backend-production-6436.up.railway.app",
+        "https://back-end-mocha-delta.vercel.app/"
         
         
      
