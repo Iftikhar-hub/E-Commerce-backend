@@ -41,14 +41,9 @@ app.use("/api/product", userRouter);
 app.use(userRouter);
 
 
-connectDB().then(() => {
-    
-    app.listen(process.env.PORT || 8000, () => {
-        console.log("Server is running on Port:", process.env.PORT || 8000);
-    });
-});
+connectDB()
 
-
+module.exports = app;
 
 
 
