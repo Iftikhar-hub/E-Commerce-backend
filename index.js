@@ -13,16 +13,7 @@ app.use(cookieParser());
 // ];
 
 app.use(cors({
-    origin: [
-        "http://localhost:5173",
-        "https://e-commerce-nu-five-82.vercel.app",
-        "https://e-commerce-backend-production-6436.up.railway.app",
-        "https://back-end-git-main-iftikhar-ali-azhars-projects.vercel.app/"
-        
-        
-        
-     
-    ],
+    origin: "*",
     credentials: true,
    
     methods: ["GET", "POST", "PUT", "DELETE"],
