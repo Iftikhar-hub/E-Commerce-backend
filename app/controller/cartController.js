@@ -93,4 +93,19 @@ const updateQuantity = async (req, res) => {
     }
 };
 
-module.exports = { addToCart, getUserCart, removeFromCart, updateQuantity };
+const clearCart = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const cart = await Cart.findOne({ user: userId });
+        if (!cart) return res.status(404).json({ msg: "Cart not found" });
+
+        cart.items = []; 
+        await cart.save();
+
+        res.status(200).json({ msg: "Cart emptied successfully" });
+    } catch (err) {
+        res.status(500).json({ msg: "Failed to empty cart", error: err.message });
+    }
+};
+
+module.exports = { addToCart, getUserCart, removeFromCart, updateQuantity, clearCart };

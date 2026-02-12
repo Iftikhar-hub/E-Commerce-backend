@@ -78,32 +78,52 @@ const userRegistration = async (req, res) => {
 };
 
 const userUpdate = async (req, res) => {
-    const { name, email, address, phone, currentPassword, newPassword, confirmNewPassword } = req.body || {};
-    
-   
+    const { name, email, address, phone, currentPassword, newPassword, confirmNewPassword } = req.body;
 
     try {
-        const userId = req.user._id;
-        const user = await userModel.findById(userId);
-       
-        const isValid = await bcrypt.compare(currentPassword, user.password);
-        if (!isValid) {
-            return res.status(400).json({
-                status: 0,
-                msg: "Invalid Current Password"
-            });
+        const user = await userModel.findById(req.user._id);
+        if (!user) {
+            return res.status(404).json({ msg: "User not found" });
         }
-       
 
-        
+        user.name = name || user.name;
+        user.email = email || user.email;
+        user.address = address || user.address;
+        user.phone = phone || user.phone;
+
+        if (currentPassword || newPassword || confirmNewPassword) {
+            if (!currentPassword) {
+                return res.status(400).json({ msg: "Enter current password" });
+            }
+
+            const isMatch = await bcrypt.compare(currentPassword, user.password);
+            if (!isMatch) {
+                return res.status(400).json({ msg: "Current password is incorrect" });
+            }
+
+            if (!newPassword || !confirmNewPassword) {
+                return res.status(400).json({ msg: "Enter new password" });
+            }
+
+            if (newPassword !== confirmNewPassword) {
+                return res.status(400).json({ msg: "Passwords do not match" });
+            }
+
+            const salt = await bcrypt.genSalt();
+            user.password = await bcrypt.hash(newPassword, salt);
+        }
+
+        await user.save();
+        return res.status(200).json({ msg: "Profile Updated Successfully" });
+
     } catch (err) {
-        res.status(500).json({
-            status: 0,
+        return res.status(500).json({
             msg: "Failed to update",
             error: err.message
         });
     }
-}
+};
+
 
 
 const userLogin = async (req, res) => {
