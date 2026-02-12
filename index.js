@@ -16,7 +16,8 @@ app.use(cors({
     origin: [
         "http://localhost:5173",
         "https://e-commerce-nu-five-82.vercel.app",
-        "https://e-commerce-backend-production-6436.up.railway.app"
+        "https://e-commerce-backend-production-6436.up.railway.app",
+        "https://back-end-mocha-delta.vercel.app/"
         
         
      
@@ -48,7 +49,7 @@ connectDB().then(() => {
     // });
 });
 
-exports.app = app;
+module.exports = app;
 
 
 
