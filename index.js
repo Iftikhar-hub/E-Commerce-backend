@@ -4,8 +4,9 @@ require("dotenv").config();
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 
+app.set("trust proxy", 1);
 app.use(cookieParser());
-
+ 
 // const allowedOrigins = [
 //     'http://localhost:5173',
 //     'https://e-commerce-nu-five-82.vercel.app',
@@ -13,12 +14,12 @@ app.use(cookieParser());
 // ];
 
 app.use(cors({
-    origin: "*",
+    origin: "https://e-commerce-f85hggy4h-iftikhar-ali-azhars-projects.vercel.app",
     credentials: true,
-   
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 app.set("trust proxy", 1);
