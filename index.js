@@ -14,7 +14,7 @@ app.use(cookieParser());
 // ];
 
 app.use(cors({
-    origin: "https://e-commerce-f85hggy4h-iftikhar-ali-azhars-projects.vercel.app",
+    origin: "https://e-commerce-nu-five-82.vercel.app",
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
