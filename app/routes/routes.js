@@ -29,7 +29,7 @@ userRouter.post("/cart/add", authMiddleware, addToCart);
 userRouter.get("/cart", authMiddleware, getUserCart);
 userRouter.post("/cart/remove", authMiddleware, removeFromCart);
 userRouter.post("/cart/update", authMiddleware, updateQuantity);
-userRouter.delete("/cart/clear-cart'", authMiddleware, clearCart);
+userRouter.delete("/cart/clear-cart", authMiddleware, clearCart);
 
 userRouter.post("/wishlist/add", authMiddleware, addToWishlist);
 userRouter.get("/wishlist", authMiddleware, getUserWishlist);
