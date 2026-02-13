@@ -2,6 +2,7 @@
 
 const productModel = require('../models/productModel')
 
+
 require("dotenv").config();
 
 const cloudinary = require("cloudinary").v2;
@@ -144,6 +145,8 @@ const invoiceRetrieval =  async (req, res) => {
         res.status(500).json({ error: "Failed to get invoice" });
     }
 }; 
+
+
 
 
    

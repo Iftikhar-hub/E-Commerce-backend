@@ -1,4 +1,5 @@
 const Cart = require('../models/cartModel');
+const Order = require("../models/orderModel");
 
 const addToCart = async (req, res) => {
     const userId = req.user._id;
@@ -108,4 +109,48 @@ const clearCart = async (req, res) => {
     }
 };
 
-module.exports = { addToCart, getUserCart, removeFromCart, updateQuantity, clearCart };
+const saveOrder = async (req, res) => {
+    const userId = req.user._id;
+    const { cartItems, totalAmount, paymentMethod, sessionId } = req.body;
+
+    if (!cartItems || cartItems.length === 0) {
+        return res.status(400).json({ msg: "Cart is empty" });
+    }
+
+    try {
+        const orderItems = cartItems.map(item => ({
+            productId: item._id,
+            pname: item.pname,
+            image: item.image,
+            discountedPrice: item.discountedPrice,
+            orignalPrice: item.orignalPrice,
+            quantity: item.quantity
+        }));
+
+        const order = new Order({
+            user: userId,
+            items: orderItems,
+            totalAmount,
+            paymentStatus: paymentMethod === 'COD' ? 'Pending' : 'Paid',
+            paymentMethod,
+            stripeSessionId: sessionId || null
+        });
+
+        await order.save();
+
+        // Clear the cart
+        const cart = await Cart.findOne({ user: userId });
+        if (cart) {
+            cart.items = [];
+            await cart.save();
+        }
+
+        res.status(200).json({ msg: "Order placed successfully", order });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ msg: "Failed to save order", error: err.message });
+    }
+};
+
+
+module.exports = { addToCart, getUserCart, removeFromCart, updateQuantity, clearCart, saveOrder };
