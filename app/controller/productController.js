@@ -80,12 +80,15 @@ const productList = async (req, res) => {
 
 const productCheckout = async (req, res) => {
     const cartSitem = req.body;
+    const { userEmail } = req.body;
+    
     try {
         const MyDomain = process.env.NODE_ENV === "production"
             ? "https://e-commerce-nu-five-82.vercel.app"
             : "http://localhost:5173";
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],
+            customer_email: userEmail,
             line_items: cartSitem.cartItems.map(item => ({
                 price_data: {
                     currency: 'usd',
@@ -147,6 +150,37 @@ const invoiceRetrieval =  async (req, res) => {
 }; 
 
 
+const searchProducts = async (req, res) => {
+    try {
+        const { q } = req.query; 
+
+        if (!q || q.trim() === "") {
+            return res.status(400).json({ msg: "Search query cannot be empty" });
+        }
+
+        const filter = {
+            $or: [
+                { pname: { $regex: q, $options: "i" } },
+                { description: { $regex: q, $options: "i" } },
+                { category: { $regex: q, $options: "i" } },
+            ],
+        };
+
+        const products = await productModel.find(filter);
+
+        res.status(200).json({
+            msg: `Search results for "${q}"`,
+            data: products,
+        });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ msg: "Search failed", error: err.message });
+    }
+};
+
+
+
 
 
 
@@ -155,4 +189,4 @@ const invoiceRetrieval =  async (req, res) => {
 
 
 
-module.exports = { productInsertion, productList, productCheckout, invoiceRetrieval };
+module.exports = { productInsertion, productList, productCheckout, invoiceRetrieval, searchProducts };

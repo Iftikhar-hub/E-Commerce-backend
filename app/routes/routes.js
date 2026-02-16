@@ -5,7 +5,7 @@ const { userRegistration, userHome, userLogin, userLogout, userProfile, userUpda
 const { authMiddleware } = require("../middleware/authMiddleware");
 const { upload } = require("../middleware/imageMiddleware");
 const { uploadProduct } = require("../middleware/productMiddleware");
-const { productInsertion, productList, productCheckout, invoiceRetrieval } = require("../controller/productController");
+const { productInsertion, productList, productCheckout, invoiceRetrieval, searchProducts } = require("../controller/productController");
 
 const { addToCart, getUserCart, removeFromCart, updateQuantity, clearCart, saveOrder } = require("../controller/cartController");
 const { addToWishlist, getUserWishlist, removeFromWishlist, updateQuantityy } = require("../controller/wishlistContoller");
@@ -41,6 +41,8 @@ userRouter.post("/send-email", sendMessage)
 userRouter.post("/sendEmail", sendEmail)
 
 userRouter.put("/user-update", authMiddleware, userUpdate)
+userRouter.get("/search-products", searchProducts);
+
 
 
 module.exports = userRouter;
